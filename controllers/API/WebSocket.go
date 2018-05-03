@@ -14,13 +14,13 @@ type ConnectionData struct {
 }
 
 func Connection(c echo.Context) error {
-	err := Redis.SET("hoge") //test
+	key, err := Redis.SET("hoge")
 	if err != nil {
 		return c.String(500, "Error")
 	}
 
 	res := &ConnectionData{
-		URL: "http://localhost:1234/api/v1/judge/" + Redis.GET("Name"),
+		URL: "http://localhost:1234/api/v1/judge/" + key,
 	}
 	return c.JSON(http.StatusOK, res)
 
