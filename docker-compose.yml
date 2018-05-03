@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  server:
+    build: .
+    command: go run server.go
+    volumes:
+      - .:/go/src/app
+      - dep_ensure:/go/src/app/vendor
+    ports:
+      - 1234:1234
+
+volumes:
+  dep_ensure:
+    driver: local
