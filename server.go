@@ -17,7 +17,7 @@ func main() {
 
 	// Route => handler
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!\n")
+		return c.String(http.StatusOK, "こんにちは世界！\n")
 	})
 
 	// Start server
