@@ -1,6 +1,14 @@
 version: '2'
 
 services:
+  redis:
+    restart: always
+    image: redis
+    volumes:
+      - /my/own/datadir:/data
+    command: redis-server --appendonly yes
+    ports:
+      - 6379:6379
   server:
     build: .
     command: realize start --server
