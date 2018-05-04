@@ -8,6 +8,7 @@ RUN apk --update add  --virtual build-deps \
 			tzdata \
 			make \
 			git \
+		&& apk add --no-cache docker \
 		&& rm -rf /var/cache/apk/* \ 
 		&& cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
