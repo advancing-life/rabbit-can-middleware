@@ -16,7 +16,11 @@ type ConnectionData struct {
 }
 
 func Connection(c echo.Context) error {
-	id := Docker.MakeContainer()
+	id, err := Docker.MakeContainer()
+	if err != nil {
+		return c.String(500, "Docker is Panic")
+	}
+
 	key, err := Redis.SET(id)
 	if err != nil {
 		return c.String(500, "Redis is Panic")
