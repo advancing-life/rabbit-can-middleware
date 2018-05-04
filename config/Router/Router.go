@@ -22,7 +22,7 @@ func Init() *echo.Echo {
 	v1 := e.Group("api/v1")
 	{
 		v1.GET("/", API.Index)
-		v1.GET("/connection", API.Connection)
+		v1.GET("/connection/:lang", API.Connection)
 		v1.GET("/connection_test/:key", API.ConnectionTest)
 	}
 

@@ -29,9 +29,24 @@ func cmdrun(input string) (Result string, err error) {
 	return
 }
 
-func MakeContainer() (ID string, err error) {
-	ID, err = cmdrun("ls -a -l")
-	return
+func MakeContainer(lang string) (ID string, err error) {
+	switch lang {
+	case "c":
+		ID, err = cmdrun("echo 'select clang'")
+		return
+	case "java":
+		ID, err = cmdrun("echo 'select java'")
+		return
+	case "python":
+		ID, err = cmdrun("echo 'select python'")
+		return
+	case "rb":
+		ID, err = cmdrun("echo 'select rb'")
+		return
+	default:
+		ID, err = cmdrun("echo 'select non'")
+		return
+	}
 }
 
 /*
