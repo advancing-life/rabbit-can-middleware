@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"app/controllers/Docker"
 	"app/controllers/Redis"
+
 	"github.com/labstack/echo"
 	"golang.org/x/net/websocket"
 )
@@ -14,9 +16,10 @@ type ConnectionData struct {
 }
 
 func Connection(c echo.Context) error {
-	key, err := Redis.SET("hoge")
+	id := Docker.MakeContainer()
+	key, err := Redis.SET(id)
 	if err != nil {
-		return c.String(500, "Error")
+		return c.String(500, "Redis is Panic")
 	}
 
 	res := &ConnectionData{
@@ -24,6 +27,14 @@ func Connection(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, res)
 
+}
+
+func ConnectionTest(c echo.Context) error {
+	res, err := Redis.GET(c.Param("key"))
+	if err != nil {
+		return c.String(404, "Not found ContainerID")
+	}
+	return c.String(200, res)
 }
 
 func Judge(c echo.Context) error {

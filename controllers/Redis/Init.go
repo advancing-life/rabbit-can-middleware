@@ -33,8 +33,8 @@ func SET(value string) (Key string, err error) {
 	return
 }
 
-func GET(key string) (get string) {
-	get, err := redis.String(Init().Do("GET", key))
+func GET(key string) (get string, err error) {
+	get, err = redis.String(Init().Do("GET", key))
 	if err != nil {
 		pp.Println(err)
 	}

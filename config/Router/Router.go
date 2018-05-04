@@ -23,6 +23,7 @@ func Init() *echo.Echo {
 	{
 		v1.GET("/", API.Index)
 		v1.GET("/connection", API.Connection)
+		v1.GET("/connection_test/:key", API.ConnectionTest)
 	}
 
 	return e
