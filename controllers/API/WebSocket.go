@@ -1,8 +1,11 @@
 package API
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"net/http"
+	"time"
 
 	"app/controllers/Docker"
 	"app/controllers/Redis"
@@ -12,22 +15,31 @@ import (
 )
 
 type ConnectionData struct {
-	URL string `json:"url" xml:"url"`
+	URL    string `json:"url" xml:"url"`
+	RESULT string `json:"result" xml:"result"`
+}
+
+func GetMD5Hash() string {
+	hasher := md5.New()
+	hasher.Write([]byte(time.Time.String(time.Now())))
+	return hex.EncodeToString(hasher.Sum(nil))
 }
 
 func Connection(c echo.Context) error {
-	id, err := Docker.MakeContainer(c.Param("lang"))
+	key := GetMD5Hash()
+	value, err := Docker.MakeContainer(key, c.Param("lang"))
 	if err != nil {
 		return c.String(500, "Docker is Panic")
 	}
 
-	key, err := Redis.SET(id)
+	err = Redis.SET(key, value)
 	if err != nil {
 		return c.String(500, "Redis is Panic")
 	}
 
 	res := &ConnectionData{
-		URL: "http://localhost:1234/api/v1/judge/" + key,
+		URL:    "http://localhost:1234/api/v1/judge/" + key,
+		RESULT: value,
 	}
 	return c.JSON(http.StatusOK, res)
 
