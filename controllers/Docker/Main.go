@@ -30,20 +30,19 @@ func cmdrun(input string) (Result string, err error) {
 	return
 }
 
-func MakeContainer(lang string) (ID string, err error) {
+func Mk(id string, lang string) (ID string, err error) {
 	switch lang {
 	case "c":
 		ID, err = cmdrun("echo 'select clang'")
 		return
 	case "java":
-		ID, err = cmdrun("docker run -t java:openjdk-7-jre-alpine java -help")
+		ID, err = cmdrun("echo 'select java'")
 		return
 	case "py":
-		ID, err = cmdrun("docker run -t python:alpine python -h")
+		ID, err = cmdrun("echo 'select py'")
 		return
 	case "rb":
-		// ID, err = cmdrun("docker run -t ruby:alpine")
-		ID, err = cmdrun("docker run -t ruby:alpine ruby -h")
+		ID, err = cmdrun("docker run --name " + id + " -itd debian:jessie /bin/bash")
 		return
 	default:
 		ID, err = cmdrun("echo 'select non'")
@@ -51,10 +50,19 @@ func MakeContainer(lang string) (ID string, err error) {
 	}
 }
 
-/*
-func DelContainer() {
+func Rm(ID string) (err error) {
+	_, err = cmdrun("docker stop " + ID)
+	if err != nil {
+		return
+	}
+	_, err = cmdrun("docker rm " + ID)
+	if err != nil {
+		return
+	}
+	return
 }
 
-func Run(cID string) {
+func Exec(ID string, cmd string) (err error) {
+	_, err = cmdrun("docker exec -it " + cmd)
+	return
 }
-*/
