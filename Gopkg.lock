@@ -55,6 +55,12 @@
   version = "v0.0.3"
 
 [[projects]]
+  name = "github.com/mattn/go-shellwords"
+  packages = ["."]
+  revision = "02e3cf038dcea8290e44424da473dd12be796a8a"
+  version = "v1.0.3"
+
+[[projects]]
   branch = "master"
   name = "github.com/valyala/bytebufferpool"
   packages = ["."]
@@ -77,6 +83,12 @@
 
 [[projects]]
   branch = "master"
+  name = "golang.org/x/net"
+  packages = ["websocket"]
+  revision = "640f4622ab692b87c2f3a94265e6f579fe38263d"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
   revision = "78d5f264b493f125018180c204871ecf58a2dce1"
@@ -84,6 +96,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f90d4e9529d55b9c21d288e42bbe925acf2b2b7bb50dbdcf618267bf39b37818"
+  inputs-digest = "87e2052b811a81e6aa900778a3a902e3906282b1db5f5ed8c941460789658c43"
   solver-name = "gps-cdcl"
   solver-version = 1
