@@ -15,11 +15,12 @@ import (
 )
 
 type ConnectionData struct {
-	URL    string `json:"url" xml:"url"`
-	RESULT string `json:"result" xml:"result"`
+	URL         string `json:"url""`
+	ContainerID string `json:"container_id"`
+	RESULT      string `json:"result"`
 }
 
-type CMD struct {
+type ExecutionCommand struct {
 	ContainerID string `json:"container_id"`
 	Command     string `json:"command"`
 	Result      string `json:"result"`
@@ -44,8 +45,9 @@ func Connection(c echo.Context) error {
 	}
 
 	res := &ConnectionData{
-		URL:    "ws://localhost:1234/api/v1/execution_environment/" + key,
-		RESULT: value,
+		URL:         "ws://localhost:1234/api/v1/execution_environment/" + key,
+		ContainerID: key,
+		RESULT:      value,
 	}
 	return c.JSON(http.StatusOK, res)
 
@@ -54,24 +56,22 @@ func Connection(c echo.Context) error {
 func ExecutionEnvironment(c echo.Context) error {
 	websocket.Handler(func(ws *websocket.Conn) {
 		for {
-			rcv := receive(ws)
+			excmd := receive(ws)
 
-			rcv.Result, _ = Docker.Exec(c.Param("name"), rcv.Command)
-			send(ws, rcv)
-
+			excmd.Result, _ = Docker.Exec(c.Param("name"), excmd.Command)
+			send(ws, excmd)
 			// _ = ws.Close()
 		}
-		// go receive(ws)
 	}).ServeHTTP(c.Response(), c.Request())
 	return nil
 }
 
-func send(ws *websocket.Conn, send *CMD) {
+func send(ws *websocket.Conn, send *ExecutionCommand) {
 	websocket.JSON.Send(ws, send)
 	fmt.Printf("Send data=\x1b[36m%#v\x1b[0m\n", send)
 }
 
-func receive(ws *websocket.Conn) (rcv *CMD) {
+func receive(ws *websocket.Conn) (rcv *ExecutionCommand) {
 	websocket.JSON.Receive(ws, &rcv)
 	fmt.Printf("Receive data=\x1b[36m%#v\x1b[0m\n", rcv)
 	return

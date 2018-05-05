@@ -10,6 +10,7 @@
 
   <body>
     <div id="app">
+      <span> {{ status }}</span><br>
       <input type="text" v-model="inputform" v-on:keyup.enter="submit">
       <div id="log" v-for="result in resultData">
         {{ result }}
@@ -18,37 +19,46 @@
 
     <script>
     let ws
-    // axios.get('http://localhost:1234/api/v1/connection/rb').then( response => {
-    // ws = new WebSocket(response.data.url)
-    ws = new WebSocket("ws://localhost:1234/api/v1/execution_environment/26a2d499d5f6e0d05f019f8d4fc01018")
-      // }).catch( error => {
-      //   console.log(error);
-      // });
+    var vm = new Vue({
+      el: "#app",
+      data: {
+        resultData: [],
+        inputform: "",
+        conntainer_id: "",
+        status: "",
+      },
+      methods: {
+        submit () {
+          ws.send(JSON.stringify({container_id: vm.conntainer_id,command: vm.inputform}))
+        }
+      },
+      mounted: () => {
+        new Promise( (resolve, reject) => {
+          axios.get('http://localhost:1234/api/v1/connection/rb').then( response => {
+            ws = new WebSocket(response.data.url);
+            vm.conntainer_id = response.data.container_id;
+            resolve();
+          }).catch( error => {
+            console.log(error);
+          })
+        }).then( () =>  {
+        ws.onopen = () => {
+          vm.status = 'サーバーと接続しました'
+        }
+        ws.onclose = () => {
+          vm.status = "サーバーとの接続が切断されました"
+        }
+        ws.onmessage = evt =>{
+          vm.resultData.unshift(JSON.parse(evt.data).result)
+        }
 
-      var vm = new Vue({
-        el: "#app",
-        data: {
-          resultData: [],
-          inputform: ""
-        },
-        methods: {
-          submit () {
-            ws.send(JSON.stringify({container_id: "abcdefg",command: vm.inputform}))
-          }
-        },
-        mounted: () => {
-          ws.onopen = () => {
-            console.log('サーバーと接続しました')
-          }
-          ws.onmessage = evt =>{
-            vm.resultData.unshift(JSON.parse(evt.data).result)
-          }
-          ws.onerror = error => {
-            console.log("Error:" + error);
-          }
+        ws.onerror = error => {
+          console.log("Error:" + error);
         }
       })
-      //
+      }
+    })
+    //
     </script>
   </body>
 
