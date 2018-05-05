@@ -18,11 +18,10 @@ func cmdrun(input string) (Result string, err error) {
 	case 1: // コマンドのみを渡された場合
 		err = exec.Command(c[0]).Run()
 	default: // コマンド+オプションを渡された場合
-		out, err = exec.Command(c[0], c[1:]...).Output()
+		out, err = exec.Command(c[0], c[1:]...).CombinedOutput()
 	}
 
 	if err != nil {
-		fmt.Println("Command Exec Error.")
 		fmt.Printf("\x1b[31m%s\x1b[0m", err)
 	}
 	fmt.Printf("\x1b[35mresult:\x1b[0m \n\x1b[31m%s\x1b[0m", string(out))
@@ -62,7 +61,7 @@ func Rm(ID string) (err error) {
 	return
 }
 
-func Exec(ID string, cmd string) (err error) {
-	_, err = cmdrun("docker exec -it " + cmd)
+func Exec(name string, cmd string) (Result string, err error) {
+	Result, err = cmdrun("docker exec -i " + name + " " + cmd)
 	return
 }
