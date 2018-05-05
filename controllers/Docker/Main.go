@@ -23,8 +23,9 @@ func cmdrun(input string) (Result string, err error) {
 
 	if err != nil {
 		fmt.Println("Command Exec Error.")
+		fmt.Printf("\x1b[31m%s\x1b[0m", err)
 	}
-	fmt.Printf("ls result: \n%s", string(out))
+	fmt.Printf("\x1b[35mresult:\x1b[0m \n\x1b[31m%s\x1b[0m", string(out))
 	Result = string(out)
 	return
 }
@@ -35,13 +36,14 @@ func MakeContainer(lang string) (ID string, err error) {
 		ID, err = cmdrun("echo 'select clang'")
 		return
 	case "java":
-		ID, err = cmdrun("echo 'select java'")
+		ID, err = cmdrun("docker run -t java:openjdk-7-jre-alpine java -help")
 		return
-	case "python":
-		ID, err = cmdrun("echo 'select python'")
+	case "py":
+		ID, err = cmdrun("docker run -t python:alpine python -h")
 		return
 	case "rb":
-		ID, err = cmdrun("echo 'select rb'")
+		// ID, err = cmdrun("docker run -t ruby:alpine")
+		ID, err = cmdrun("docker run -t ruby:alpine ruby -h")
 		return
 	default:
 		ID, err = cmdrun("echo 'select non'")
