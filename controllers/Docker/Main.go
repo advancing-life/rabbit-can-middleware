@@ -24,7 +24,7 @@ func cmdrun(input string) (Result string, err error) {
 	if err != nil {
 		fmt.Printf("\x1b[31m%s\x1b[0m", err)
 	}
-	fmt.Printf("\x1b[35mresult:\x1b[0m \n\x1b[31m%s\x1b[0m", string(out))
+	fmt.Printf("\x1b[35mresult:\x1b[0m \x1b[31m%s\x1b[0m", string(out))
 	Result = string(out)
 	return
 }
