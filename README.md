@@ -10,8 +10,8 @@
 7. Echoがjqueryに返却
 
 
-![image1](https://raw.githubusercontent.com/advancing-life/rabbit-can-middleware/master/.images/Middleware-1.jpg)
-![image2](https://raw.githubusercontent.com/advancing-life/rabbit-can-middleware/master/.images/Middleware-2.jpg)
+![image1](https://raw.githubusercontent.com/advancing-life/rabbit-can-middleware/develop/.images/Middleware-1.jpg)
+![image2](https://raw.githubusercontent.com/advancing-life/rabbit-can-middleware/develop/.images/Middleware-2.jpg)
 
 ## /api/v1/ (GET)
 [SampleURL](http://localhost:1234/api/v1)
