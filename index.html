@@ -1,32 +1,55 @@
 <!doctype html>
 <html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <title>WebSocket</title>
-</head>
+  <head>
+    <meta charset="utf-8">
+    <title>WebSocket</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
 
-<body>
-  <p id="output"></p>
+  <body>
+    <div id="app">
+      <input type="text" v-model="inputform" v-on:keyup.enter="submit">
+      <div id="log" v-for="result in resultData">
+        {{ result }}
+      </div>
+    </div>
 
-  <script>
-    const uri = "ws://localhost:1234/api/v1/connection";
+    <script>
+    let ws
+    // axios.get('http://localhost:1234/api/v1/connection/rb').then( response => {
+    // ws = new WebSocket(response.data.url)
+    ws = new WebSocket("ws://localhost:1234/api/v1/execution_environment/26a2d499d5f6e0d05f019f8d4fc01018")
+      // }).catch( error => {
+      //   console.log(error);
+      // });
 
-    ws = new WebSocket(uri)
-
-    ws.onopen = function() {
-      console.log('Connected')
-    }
-
-    ws.onmessage = function(evt) {
-      var out = document.getElementById('output');
-      out.innerHTML += evt.data + '<br>';
-    }
-
-    setInterval(function() {
-      ws.send('Hello, Server!');
-    }, 1000);
-  </script>
-</body>
+      var vm = new Vue({
+        el: "#app",
+        data: {
+          resultData: [],
+          inputform: ""
+        },
+        methods: {
+          submit () {
+            ws.send(JSON.stringify({container_id: "abcdefg",command: vm.inputform}))
+          }
+        },
+        mounted: () => {
+          ws.onopen = () => {
+            console.log('サーバーと接続しました')
+          }
+          ws.onmessage = evt =>{
+            vm.resultData.unshift(JSON.parse(evt.data).result)
+          }
+          ws.onerror = error => {
+            console.log("Error:" + error);
+          }
+        }
+      })
+      //
+    </script>
+  </body>
 
 </html>
