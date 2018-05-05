@@ -1,10 +1,6 @@
 package Redis
 
 import (
-	"crypto/md5"
-	"encoding/hex"
-	"time"
-
 	"github.com/gomodule/redigo/redis"
 	"github.com/k0kubun/pp"
 )
@@ -18,15 +14,8 @@ func Init() (connection redis.Conn) {
 	return
 }
 
-func GetMD5Hash() string {
-	hasher := md5.New()
-	hasher.Write([]byte(time.Time.String(time.Now())))
-	return hex.EncodeToString(hasher.Sum(nil))
-}
-
-func SET(value string) (Key string, err error) {
-	Key = GetMD5Hash()
-	_, err = Init().Do("SET", Key, value)
+func SET(key string, value string) (err error) {
+	_, err = Init().Do("SET", key, value)
 	if err != nil {
 		pp.Println(err)
 	}
