@@ -6,17 +6,30 @@
     <title>WebSocket</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+      body , input{
+        background: #073642;
+        color: #EEE8D5;
+        }
+        input {
+          width: 100%;
+          border: none;
+        }
+        input:hover{
+          border-color: transparent;
+          background: transparent;
+        }
+    </style>
   </head>
 
   <body>
     <div id="app">
-      <span> {{ status }}</span><br>
-      <input type="text" v-model="inputform" v-on:keyup.enter="submit">
       <div id="log" v-for="result in resultData">
-        {{ result }}
+        <p v-html="result"></p>&gt;&gt; 
       </div>
+      <input type="text" v-model="inputform" v-on:keyup.enter="submit">
+      <span> {{ status }}: サーバーは{{ conntainer_id }} です</span><br>
     </div>
-
     <script>
     let ws
     var vm = new Vue({
@@ -29,7 +42,8 @@
       },
       methods: {
         submit () {
-          ws.send(JSON.stringify({container_id: vm.conntainer_id,command: vm.inputform}))
+          ws.send(JSON.stringify({container_id: vm.conntainer_id,command: vm.inputform}));
+          vm.inputform = "";
         }
       },
       mounted: () => {
@@ -42,24 +56,23 @@
             console.log(error);
           })
         }).then( () =>  {
-        ws.onopen = () => {
-          vm.status = 'サーバーと接続しました'
-        }
-        ws.onclose = () => {
-          vm.status = "サーバーとの接続が切断されました"
-        }
-        ws.onmessage = evt =>{
-          vm.resultData.unshift(JSON.parse(evt.data).result)
-        }
+          ws.onopen = () => {
+            vm.status = 'サーバーと接続しました'
+          }
+          ws.onclose = () => {
+            vm.status = "サーバーとの接続が切断されました"
+          }
+          ws.onmessage = evt =>{
+            vm.resultData.push(JSON.parse(evt.data).result.replace(/\r?\n/g, '<br>'));
+          }
 
-        ws.onerror = error => {
-          console.log("Error:" + error);
-        }
-      })
+          ws.onerror = error => {
+            console.log("Error:" + error);
+          }
+        })
       }
     })
     //
     </script>
   </body>
 
-</html>
