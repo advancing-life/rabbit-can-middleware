@@ -23,6 +23,12 @@
   version = "v2.3.0"
 
 [[projects]]
+  name = "github.com/kelseyhightower/envconfig"
+  packages = ["."]
+  revision = "f611eb38b3875cc3bd991ca91c51d06446afa14c"
+  version = "v1.3.0"
+
+[[projects]]
   name = "github.com/labstack/echo"
   packages = [
     ".",
@@ -96,6 +102,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "87e2052b811a81e6aa900778a3a902e3906282b1db5f5ed8c941460789658c43"
+  inputs-digest = "660af7dcc8d866d932e5495ac7ea81478e4efed83d97ff5b6c7fd5cbe12f2c57"
   solver-name = "gps-cdcl"
   solver-version = 1

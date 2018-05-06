@@ -1,10 +1,31 @@
 package main
 
 import (
-    "app/config/Router"
+	"app/config/Router"
+	"github.com/kelseyhightower/envconfig"
+	"log"
 )
 
+type Config struct {
+	Server Server
+	Redis  Redis
+}
+
+type Server struct {
+	Host string `default:"http://localhost"`
+	Port string `default:":1234"`
+}
+
+type Redis struct {
+	Host string `default:"redis"`
+	Port string `default:":6379"`
+}
+
 func main() {
-    router := Router.Init()
-	router.Logger.Fatal(router.Start(":1234"))
+	var config Config
+	envconfig.Process("", &config)
+
+	log.Println(config)
+	router := Router.Init()
+	router.Logger.Fatal(router.Start(config.Server.Port))
 }
