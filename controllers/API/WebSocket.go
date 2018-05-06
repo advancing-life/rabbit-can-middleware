@@ -14,17 +14,19 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-type ConnectionData struct {
-	URL         string `json:"url""`
-	ContainerID string `json:"container_id"`
-	RESULT      string `json:"result"`
-}
+type (
+	ConnectionData struct {
+		URL         string `json:"url""`
+		ContainerID string `json:"container_id"`
+		RESULT      string `json:"result"`
+	}
 
-type ExecutionCommand struct {
-	ContainerID string `json:"container_id"`
-	Command     string `json:"command"`
-	Result      string `json:"result"`
-}
+	ExecutionCommand struct {
+		ContainerID string `json:"container_id"`
+		Command     string `json:"command"`
+		Result      string `json:"result"`
+	}
+)
 
 func GetMD5Hash() string {
 	hasher := md5.New()

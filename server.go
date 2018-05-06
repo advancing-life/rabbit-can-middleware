@@ -6,20 +6,22 @@ import (
 	"log"
 )
 
-type Config struct {
-	Server Server
-	Redis  Redis
-}
+type (
+	Config struct {
+		Server Server
+		Redis  Redis
+	}
 
-type Server struct {
-	Host string `default:"http://localhost"`
-	Port string `default:":1234"`
-}
+	Server struct {
+		Host string `default:"http://localhost"`
+		Port string `default:":1234"`
+	}
 
-type Redis struct {
-	Host string `default:"redis"`
-	Port string `default:":6379"`
-}
+	Redis struct {
+		Host string `default:"redis"`
+		Port string `default:":6379"`
+	}
+)
 
 func main() {
 	var config Config
