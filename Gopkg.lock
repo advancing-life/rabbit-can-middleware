@@ -2,6 +2,21 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/advancing-life/rabbit-can-middleware"
+  packages = [
+    "controllers/Docker",
+    "controllers/Redis"
+  ]
+  revision = "1f6f6540f41a40a969d93f2a9fb899dc700a2f60"
+
+[[projects]]
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  revision = "346938d642f2ec3594ed81d874461961cd0faa76"
+  version = "v1.1.0"
+
+[[projects]]
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
   revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
@@ -67,6 +82,18 @@
   version = "v1.0.3"
 
 [[projects]]
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/stretchr/testify"
+  packages = ["assert"]
+  revision = "12b6f73e6084dad08a7c6e575284b177ecafbc71"
+  version = "v1.2.1"
+
+[[projects]]
   branch = "master"
   name = "github.com/valyala/bytebufferpool"
   packages = ["."]
@@ -102,6 +129,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "82ee6ba759d81a7ec34a6fee8e0d5989f289d21f721dd48ffa146f1735429759"
+  inputs-digest = "6bdc451a069972346189906dde3435f3b0a09d7f4d0ad7e706fce50bf4db6c96"
   solver-name = "gps-cdcl"
   solver-version = 1
