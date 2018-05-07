@@ -2,38 +2,47 @@ package Redis
 
 import (
 	"github.com/gomodule/redigo/redis"
-	"github.com/k0kubun/pp"
 )
 
-func Init() (connection redis.Conn) {
-	connection, err := redis.Dial("tcp", "redis:6379")
-	if err != nil {
-		pp.Println(err)
-	}
+func Init() (connection redis.Conn, err error) {
+	connection, err = redis.Dial("tcp", "redis:6379")
 	// defer connection.Close()
 	return
 }
 
 func SET(key string, value string) (err error) {
-	_, err = Init().Do("SET", key, value)
+	r, err := Init()
 	if err != nil {
-		pp.Println(err)
+		return
+	}
+
+	_, err = r.Do("SET", key, value)
+	if err != nil {
+		return
 	}
 	return
 }
 
 func GET(key string) (get string, err error) {
-	get, err = redis.String(Init().Do("GET", key))
+	r, err := Init()
 	if err != nil {
-		pp.Println(err)
+		return
+	}
+	get, err = redis.String(r.Do("GET", key))
+	if err != nil {
+		return
 	}
 	return
 }
 
-func EXISTS(key string) (exists bool) {
-	exists, err := redis.Bool(Init().Do("EXISTS", key))
+func EXISTS(key string) (exists bool, err error) {
+	r, err := Init()
 	if err != nil {
-		pp.Println(err)
+		return
+	}
+	exists, err = redis.Bool(r.Do("EXISTS", key))
+	if err != nil {
+		return
 	}
 	return
 }

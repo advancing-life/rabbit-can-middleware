@@ -7,8 +7,10 @@ import (
 	"net/http"
 	"time"
 
-	"app/controllers/Docker"
-	"app/controllers/Redis"
+	// "app/controllers/Docker"
+	// "app/controllers/Redis"
+	"github.com/advancing-life/rabbit-can-middleware/controllers/Docker"
+	"github.com/advancing-life/rabbit-can-middleware/controllers/Redis"
 
 	"github.com/labstack/echo"
 	"golang.org/x/net/websocket"
@@ -36,13 +38,16 @@ func GetMD5Hash() string {
 
 func Connection(c echo.Context) error {
 	key := GetMD5Hash()
+
 	value, err := Docker.Mk(key, c.Param("lang"))
 	if err != nil {
+		c.Logger().Error(err)
 		return c.String(500, "Docker is Panic")
 	}
 
 	err = Redis.SET(key, value)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.String(500, "Redis is Panic")
 	}
 
@@ -58,9 +63,13 @@ func Connection(c echo.Context) error {
 func ExecutionEnvironment(c echo.Context) error {
 	websocket.Handler(func(ws *websocket.Conn) {
 		for {
-			excmd := receive(ws)
+			excmd, err := receive(ws)
+			if err != nil {
+				c.Logger().Error(err)
+			}
 
 			excmd.Result, _ = Docker.Exec(c.Param("name"), excmd.Command)
+
 			send(ws, excmd)
 			// _ = ws.Close()
 		}
@@ -73,8 +82,11 @@ func send(ws *websocket.Conn, send *ExecutionCommand) {
 	fmt.Printf("Send data=\x1b[36m%#v\x1b[0m\n", send)
 }
 
-func receive(ws *websocket.Conn) (rcv *ExecutionCommand) {
-	websocket.JSON.Receive(ws, &rcv)
+func receive(ws *websocket.Conn) (rcv *ExecutionCommand, err error) {
+	err = websocket.JSON.Receive(ws, &rcv)
+	if err != nil {
+		return
+	}
 	fmt.Printf("Receive data=\x1b[36m%#v\x1b[0m\n", rcv)
 	return
 }
