@@ -3,8 +3,8 @@ package API
 import (
 	"net/http"
 	"net/http/httptest"
-	"strconv"
 	// "strings"
+	"encoding/json"
 	"testing"
 
 	"github.com/labstack/echo"
@@ -40,9 +40,15 @@ func TestConnection(t *testing.T) {
 	c.SetParamNames("lang")
 	c.SetParamValues("rb")
 
+	rd := new(ConnectionData)
 	if assert.NoError(t, Connection(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code, "Two http status codes are different")
-		hoge := strconv.Itoa(123)
-		assert.Exactly(t, hoge, "123")
+		err := json.Unmarshal(([]byte)(rec.Body.String()), rd)
+		if err != nil {
+			t.Error("Error: JSON Parse")
+		}
+		assert.NotEmpty(t, rd.URL)
+		assert.NotEmpty(t, rd.ContainerID)
+		assert.NotEmpty(t, rd.RESULT)
 	}
 }
