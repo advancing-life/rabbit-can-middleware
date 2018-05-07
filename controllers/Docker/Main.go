@@ -1,7 +1,6 @@
 package Docker
 
 import (
-	"fmt"
 	"github.com/mattn/go-shellwords"
 	"os/exec"
 )
@@ -22,9 +21,8 @@ func cmdrun(input string) (Result string, err error) {
 	}
 
 	if err != nil {
-		fmt.Printf("\x1b[31m%s\x1b[0m", err)
+		return
 	}
-	fmt.Printf("\x1b[35mresult:\x1b[0m \x1b[31m%s\x1b[0m", string(out))
 	Result = string(out)
 	return
 }
