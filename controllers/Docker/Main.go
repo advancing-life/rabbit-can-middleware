@@ -59,7 +59,11 @@ func Rm(ID string) (err error) {
 	return
 }
 
-func Exec(name string, cmd string) (Result string, err error) {
+func Exec(name string, cmd string) (Result, ExitStatus string, err error) {
 	Result, err = cmdrun("docker exec -i " + name + " " + cmd)
+	if err != nil {
+		return
+	}
+	ExitStatus, err = cmdrun("docker exec -i " + name + " echo $?")
 	return
 }
