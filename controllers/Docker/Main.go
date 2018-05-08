@@ -1,9 +1,19 @@
 package Docker
 
 import (
+	// "github.com/advancing-life/rabbit-can-middleware/controllers/API"
+	"bufio"
+	"fmt"
 	"github.com/mattn/go-shellwords"
 	"os/exec"
 )
+
+type ExecutionCommand struct {
+	ContainerID string `json:"container_id"`
+	Command     string `json:"command"`
+	Result      string `json:"result"`
+	ExitStatus  string `json"exit_status"`
+}
 
 func cmdrun(input string) (Result string, err error) {
 	var out []byte
@@ -27,7 +37,7 @@ func cmdrun(input string) (Result string, err error) {
 	return
 }
 
-func Mk(id string, lang string) (ID string, err error) {
+func Mk(id, lang string) (ID string, err error) {
 	switch lang {
 	case "c":
 		ID, err = cmdrun("docker run --name " + id + " -itd jpnlavender/clang_on_debian /bin/bash")
@@ -59,11 +69,29 @@ func Rm(ID string) (err error) {
 	return
 }
 
-func Exec(name string, cmd string) (Result, ExitStatus string, err error) {
-	Result, err = cmdrun("docker exec -i " + name + " " + cmd)
-	if err != nil {
-		return
-	}
-	ExitStatus, err = cmdrun("docker exec -i " + name + " echo $?")
-	return
+func Exec(ch chan ExecutionCommand, name, cmd string) {
+	// go cmdrun(exits, "docker exec -i "+name+" echo $?")
+
+	go func() {
+		defer close(ch)
+		c, err := shellwords.Parse("docker exec -i " + name + " " + cmd)
+
+		if err != nil {
+			fmt.Print(err)
+		}
+		ecmd := exec.Command(c[0], c[1:]...)
+		stdout, err := ecmd.StdoutPipe()
+
+		if err != nil {
+			fmt.Print(err)
+		}
+
+		ecmd.Start()
+
+		scanner := bufio.NewScanner(stdout)
+		for scanner.Scan() {
+			ch <- ExecutionCommand{Result: scanner.Text()}
+		}
+		ecmd.Wait()
+	}()
 }
