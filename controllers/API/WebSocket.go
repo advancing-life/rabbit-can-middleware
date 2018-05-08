@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"time"
 
-	// "app/controllers/Docker"
-	// "app/controllers/Redis"
-	"github.com/advancing-life/rabbit-can-middleware/controllers/Docker"
-	"github.com/advancing-life/rabbit-can-middleware/controllers/Redis"
+	"app/controllers/Docker"
+	"app/controllers/Redis"
+	// "github.com/advancing-life/rabbit-can-middleware/controllers/Docker"
+	// "github.com/advancing-life/rabbit-can-middleware/controllers/Redis"
 
 	"github.com/labstack/echo"
 	"golang.org/x/net/websocket"
@@ -21,13 +21,6 @@ type (
 		URL         string `json:"url""`
 		ContainerID string `json:"container_id"`
 		RESULT      string `json:"result"`
-	}
-
-	ExecutionCommand struct {
-		ContainerID string `json:"container_id"`
-		Command     string `json:"command"`
-		Result      string `json:"result"`
-		ExitStatus  string `json"exit_status"`
 	}
 )
 
@@ -70,20 +63,26 @@ func ExecutionEnvironment(c echo.Context) error {
 				c.Logger().Error(err)
 			}
 
-			excmd.Result, excmd.ExitStatus, _ = Docker.Exec(c.Param("name"), excmd.Command)
+			ch := make(chan Docker.ExecutionCommand)
+			go Docker.Exec(ch, c.Param("name"), excmd.Command)
 
-			send(ws, excmd)
+			for v := range ch {
+				send(ws, v)
+			}
+
+			// excmd.Result, excmd.ExitStatus, _ = Docker.Exec(c.Param("name"), excmd.Command)
+
 		}
 	}).ServeHTTP(c.Response(), c.Request())
 	return nil
 }
 
-func send(ws *websocket.Conn, send *ExecutionCommand) {
+func send(ws *websocket.Conn, send Docker.ExecutionCommand) {
 	websocket.JSON.Send(ws, send)
 	fmt.Printf("Send data=\x1b[36m%#v\x1b[0m\n", send)
 }
 
-func receive(ws *websocket.Conn) (rcv *ExecutionCommand, err error) {
+func receive(ws *websocket.Conn) (rcv Docker.ExecutionCommand, err error) {
 	err = websocket.JSON.Receive(ws, &rcv)
 	if err != nil {
 		return
