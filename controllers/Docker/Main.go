@@ -30,19 +30,19 @@ func cmdrun(input string) (Result string, err error) {
 func Mk(id string, lang string) (ID string, err error) {
 	switch lang {
 	case "c":
-		ID, err = cmdrun("echo 'select clang'")
+		ID, err = cmdrun("docker run --name " + id + " -itd debian:jessie /bin/bash")
 		return
 	case "java":
-		ID, err = cmdrun("echo 'select java'")
+		ID, err = cmdrun("docker run --name " + id + " -itd debian:jessie /bin/bash")
 		return
 	case "py":
-		ID, err = cmdrun("echo 'select py'")
+		ID, err = cmdrun("docker run --name " + id + " -itd debian:jessie /bin/bash")
 		return
 	case "rb":
 		ID, err = cmdrun("docker run --name " + id + " -itd debian:jessie /bin/bash")
 		return
 	default:
-		ID, err = cmdrun("echo 'select non'")
+		ID, err = cmdrun("docker run --name " + id + " -itd debian:jessie /bin/bash")
 		return
 	}
 }
