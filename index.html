@@ -63,7 +63,9 @@
             vm.status = "サーバーとの接続が切断されました"
           }
           ws.onmessage = evt =>{
-            vm.resultData.push(JSON.parse(evt.data).result.replace(/\r?\n/g, '<br>'));
+            let data = JSON.parse(evt.data);
+            console.log(data);
+            vm.resultData.push(data.result.replace(/\r?\n/g, '<br>'));
           }
 
           ws.onerror = error => {

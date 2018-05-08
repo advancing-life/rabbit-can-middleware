@@ -14,9 +14,11 @@ func TestMk(t *testing.T) {
 }
 
 func TestExec(t *testing.T) {
-	result, err := Exec("test", "date")
-	assert.NotEmpty(t, result)
-	assert.NoError(t, err)
+	result, exit_status, err := Exec("test", "date")
+	if assert.NoError(t, err) {
+		assert.NotEmpty(t, result)
+		assert.Equal(exit_status, "0")
+	}
 }
 
 func TestRm(t *testing.T) {

@@ -27,6 +27,7 @@ type (
 		ContainerID string `json:"container_id"`
 		Command     string `json:"command"`
 		Result      string `json:"result"`
+		ExitStatus  string `json"exit_status"`
 	}
 )
 
@@ -62,16 +63,16 @@ func Connection(c echo.Context) error {
 
 func ExecutionEnvironment(c echo.Context) error {
 	websocket.Handler(func(ws *websocket.Conn) {
+		defer ws.Close()
 		for {
 			excmd, err := receive(ws)
 			if err != nil {
 				c.Logger().Error(err)
 			}
 
-			excmd.Result, _ = Docker.Exec(c.Param("name"), excmd.Command)
+			excmd.Result, excmd.ExitStatus, _ = Docker.Exec(c.Param("name"), excmd.Command)
 
 			send(ws, excmd)
-			// _ = ws.Close()
 		}
 	}).ServeHTTP(c.Response(), c.Request())
 	return nil
