@@ -14,10 +14,14 @@ func TestMk(t *testing.T) {
 }
 
 func TestExec(t *testing.T) {
-	result, exit_status, err := Exec("test", "date")
-	if assert.NoError(t, err) {
-		assert.NotEmpty(t, result)
-		assert.Equal(exit_status, "0")
+	// result, exit_status, err := Exec("test", "date")
+	result := make(chan ExecutionCommand)
+	go Exec(result, "test", "ls -al")
+
+	for i := range result {
+		assert.NotEmpty(t, i)
+		// assert.Equal(exit_status, "0")
+		t.Log(i)
 	}
 }
 
