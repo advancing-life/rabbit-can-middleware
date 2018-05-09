@@ -60,18 +60,16 @@ func ExecutionEnvironment(c echo.Context) error {
 		for {
 			excmd, err := receive(ws)
 			if err != nil {
+				ws.Close()
 				c.Logger().Error(err)
 			}
 
-			ch := make(chan Docker.ExecutionCommand)
-			go Docker.Exec(ch, c.Param("name"), excmd.Command)
+			exec := make(chan Docker.ExecutionCommand)
+			go Docker.Exec(exec, c.Param("name"), excmd.Command)
 
-			for v := range ch {
+			for v := range exec {
 				send(ws, v)
 			}
-
-			// excmd.Result, excmd.ExitStatus, _ = Docker.Exec(c.Param("name"), excmd.Command)
-
 		}
 	}).ServeHTTP(c.Response(), c.Request())
 	return nil
