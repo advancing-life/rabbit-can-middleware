@@ -10,8 +10,8 @@
 7. Echoがjqueryに返却
 
 
-![image1](https://raw.githubusercontent.com/advancing-life/rabbit-can-middleware/develop/.images/Middleware-1.jpg)
-![image2](https://raw.githubusercontent.com/advancing-life/rabbit-can-middleware/develop/.images/Middleware-2.jpg)
+![image1](https://github.com/advancing-life/rabbit-can-middleware/blob/master/.images/Middleware-1.jpg?raw=true)
+![image2](https://github.com/advancing-life/rabbit-can-middleware/blob/master/.images/Middleware-2.jpg?raw=true)
 
 ## /api/v1/ (GET)
 [SampleURL](http://localhost:1234/api/v1)
@@ -70,7 +70,6 @@
 {
     "container_id": "11aa1d97274d794a90fe10c32ba828de",
     "command": "ls",
-    "result": "",
 }
 ~~~
 
@@ -78,7 +77,6 @@
 |:--|:--|:--|
 |container_id|string|DockerContainerのName|
 |command|string|実行したいコマンド|
-|result|string|実行結果の返却用|
 
 ### Responce
 
@@ -87,6 +85,7 @@
     "container_id": "11aa1d97274d794a90fe10c32ba828de",
     "command": "ls",
     "result":"bin/nboot\ndev\netc\nhome\nlib\nlib64\nmedia\nmnt\nopt\nproc\nroot\nrun\nsbin\nsrv\nsys\ntmp\nusr\nvar",
+    "exit_status": 0,
 }
 ~~~
 
@@ -95,5 +94,6 @@
 |container_id|string|DockerContainerのName|
 |command|string|実行したコマンド|
 |result|string|実行結果|
+|exit_status|int|終了時のExitStatus|
 
 
