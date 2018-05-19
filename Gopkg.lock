@@ -2,16 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
-  name = "github.com/advancing-life/rabbit-can-middleware"
-  packages = [
-    "controllers/API",
-    "controllers/Docker",
-    "controllers/Redis"
-  ]
-  revision = "43eac7dfc7f8df04d96ff4e6a3f23302c7787c83"
-
-[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
@@ -107,27 +97,23 @@
     "acme",
     "acme/autocert"
   ]
-  revision = "4ec37c66abab2c7e02ae775328b2ff001c3f025a"
+  revision = "1a580b3eff7814fc9b40602fd35256c63b50f491"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["websocket"]
-  revision = "d11bb6cd8e3c4e60239c9cb20ef68586d74500d0"
+  revision = "2491c5de3490fced2f6cff376127c667efeed857"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "7db1c3b1a98089d0071c84f646ff5c96aad43682"
+  revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-<<<<<<< HEAD
-  inputs-digest = "bfe5a523284bab9a1d3024d59e9d68a368ddad694a7f2d6d0303ebe826eee9ab"
-=======
-  inputs-digest = "c6b2d00e823f56ec1d2e1b2b4ef3720f9231d8d1772c68ab62b73008b0c2f610"
->>>>>>> master
+  inputs-digest = "f89a3cfc7675ec8671825a8e6240d73b5afaa119f2e19cfd17d45ae55f737d6b"
   solver-name = "gps-cdcl"
   solver-version = 1
