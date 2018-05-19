@@ -58,14 +58,14 @@ func ExecutionEnvironment(c echo.Context) error {
 	websocket.Handler(func(ws *websocket.Conn) {
 		defer ws.Close()
 		for {
-			excmd, err := receive(ws)
+			execmd, err := receive(ws)
 			if err != nil {
 				ws.Close()
 				c.Logger().Error(err)
 			}
 
 			exec := make(chan Docker.ExecutionCommand)
-			go Docker.Exec(exec, c.Param("name"), excmd.Command)
+			go Docker.Exec(exec, execmd, c.Param("name"))
 
 			for v := range exec {
 				send(ws, v)

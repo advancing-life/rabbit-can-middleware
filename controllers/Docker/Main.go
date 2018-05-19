@@ -69,12 +69,12 @@ func Rm(ID string) (err error) {
 	return
 }
 
-func Exec(exech chan ExecutionCommand, name, cmd string) {
+func Exec(exech chan ExecutionCommand, execmd ExecutionCommand, name string) {
 	// go cmdrun(exits, "docker exec -i "+name+" echo $?")
 
 	go func() {
 		defer close(exech)
-		c, err := shellwords.Parse("docker exec -i " + name + " " + cmd)
+		c, err := shellwords.Parse("docker exec -i " + name + " " + execmd.Command)
 
 		if err != nil {
 			fmt.Print(err)
@@ -90,7 +90,9 @@ func Exec(exech chan ExecutionCommand, name, cmd string) {
 
 		scanner := bufio.NewScanner(stdout)
 		for scanner.Scan() {
-			exech <- ExecutionCommand{Result: scanner.Text()}
+			execmd.Result = scanner.Text()
+			exech <- execmd
+			// exech <- ExecutionCommand{Result: scanner.Text()}
 		}
 		ecmd.Wait()
 	}()
