@@ -12,7 +12,7 @@ type ExecutionCommand struct {
 	ContainerID string `json:"container_id"`
 	Command     string `json:"command"`
 	Result      string `json:"result"`
-	ExitStatus  string `json"exit_status"`
+	ExitStatus  string `json:"exit_status"`
 }
 
 func cmdrun(input string) (Result string, err error) {
