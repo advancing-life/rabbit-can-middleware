@@ -1,4 +1,4 @@
-package Docker
+package docker
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -16,7 +16,9 @@ func TestMk(t *testing.T) {
 func TestExec(t *testing.T) {
 	// result, exit_status, err := Exec("test", "date")
 	result := make(chan ExecutionCommand)
-	go Exec(result, "test", "ls -al")
+	execmd := ExecutionCommand{ContainerID: "test", Command: "ls -la"}
+
+	go Exec(result, execmd, "ls -al")
 
 	for i := range result {
 		assert.NotEmpty(t, i)

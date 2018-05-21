@@ -1,15 +1,17 @@
-package Redis
+package redis
 
 import (
 	"github.com/gomodule/redigo/redis"
 )
 
+// Init ...
 func Init() (connection redis.Conn, err error) {
 	connection, err = redis.Dial("tcp", "redis:6379")
 	// defer connection.Close()
 	return
 }
 
+// SET ...
 func SET(key string, value string) (err error) {
 	r, err := Init()
 	if err != nil {
@@ -23,6 +25,7 @@ func SET(key string, value string) (err error) {
 	return
 }
 
+// GET ...
 func GET(key string) (get string, err error) {
 	r, err := Init()
 	if err != nil {
@@ -35,6 +38,7 @@ func GET(key string) (get string, err error) {
 	return
 }
 
+// EXISTS ...
 func EXISTS(key string) (exists bool, err error) {
 	r, err := Init()
 	if err != nil {
