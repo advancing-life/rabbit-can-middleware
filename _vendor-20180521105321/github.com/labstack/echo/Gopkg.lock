@@ -14,39 +14,10 @@
   version = "v3.2.0"
 
 [[projects]]
-  name = "github.com/gomodule/redigo"
-  packages = [
-    "internal",
-    "redis"
-  ]
-  revision = "9c11da706d9b7902c6da69c592f75637793fe121"
-  version = "v2.0.0"
-
-[[projects]]
-  name = "github.com/kelseyhightower/envconfig"
-  packages = ["."]
-  revision = "f611eb38b3875cc3bd991ca91c51d06446afa14c"
-  version = "v1.3.0"
-
-[[projects]]
-  name = "github.com/labstack/echo"
-  packages = [
-    ".",
-    "middleware"
-  ]
-  revision = "6d227dfea4d2e52cb76856120b3c17f758139b4e"
-  version = "3.3.5"
-
-[[projects]]
   name = "github.com/labstack/gommon"
-  packages = [
-    "bytes",
-    "color",
-    "log",
-    "random"
-  ]
-  revision = "588f4e8bddc6cb45c27b448e925c7fd6a5545434"
-  version = "0.2.5"
+  packages = ["bytes","color","log","random"]
+  revision = "6fe1405d73ec4bd4cd8a4ac8e2a2b2bf95d03954"
+  version = "0.2.4"
 
 [[projects]]
   name = "github.com/mattn/go-colorable"
@@ -59,12 +30,6 @@
   packages = ["."]
   revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
   version = "v0.0.3"
-
-[[projects]]
-  name = "github.com/mattn/go-shellwords"
-  packages = ["."]
-  revision = "02e3cf038dcea8290e44424da473dd12be796a8a"
-  version = "v1.0.3"
 
 [[projects]]
   name = "github.com/pmezard/go-difflib"
@@ -93,27 +58,18 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = [
-    "acme",
-    "acme/autocert"
-  ]
-  revision = "1a580b3eff7814fc9b40602fd35256c63b50f491"
-
-[[projects]]
-  branch = "master"
-  name = "golang.org/x/net"
-  packages = ["websocket"]
-  revision = "57065200b4b034a1c8ad54ff77069408c2218ae6"
+  packages = ["acme","acme/autocert"]
+  revision = "182114d582623c1caa54f73de9c7224e23a48487"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
+  revision = "c28acc882ebcbfbe8ce9f0f14b9ac26ee138dd51"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8ba3440e12e53e1472dd3bee215472e2863332967568a332165b53fbfcef3b5d"
+  inputs-digest = "9c7b45e80fe353405800cf01f429b3a203cfb8d4468a04c64a908e11a98ea764"
   solver-name = "gps-cdcl"
   solver-version = 1
