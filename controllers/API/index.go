@@ -1,4 +1,4 @@
-package API
+package api
 
 import (
 	"github.com/labstack/echo"

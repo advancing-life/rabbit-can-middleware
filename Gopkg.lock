@@ -2,6 +2,15 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/advancing-life/rabbit-can-middleware"
+  packages = [
+    "controllers/Docker",
+    "controllers/Redis"
+  ]
+  revision = "ead099fe2878760dd87042953efc21a89432e2e5"
+
+[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
@@ -114,6 +123,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f89a3cfc7675ec8671825a8e6240d73b5afaa119f2e19cfd17d45ae55f737d6b"
+  inputs-digest = "c6b2d00e823f56ec1d2e1b2b4ef3720f9231d8d1772c68ab62b73008b0c2f610"
   solver-name = "gps-cdcl"
   solver-version = 1

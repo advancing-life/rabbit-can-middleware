@@ -1,4 +1,4 @@
-package API
+package api
 
 import (
 	"crypto/md5"
@@ -7,16 +7,17 @@ import (
 	"net/http"
 	"time"
 
-	"app/controllers/Docker"
-	"app/controllers/Redis"
-	// "github.com/advancing-life/rabbit-can-middleware/controllers/Docker"
-	// "github.com/advancing-life/rabbit-can-middleware/controllers/Redis"
+	// "app/controllers/Docker"
+	// "app/controllers/Redis"
+	"github.com/advancing-life/rabbit-can-middleware/controllers/Docker"
+	"github.com/advancing-life/rabbit-can-middleware/controllers/Redis"
 
 	"github.com/labstack/echo"
 	"golang.org/x/net/websocket"
 )
 
 type (
+	// ConnectionData ...
 	ConnectionData struct {
 		URL         string `json:"url""`
 		ContainerID string `json:"container_id"`
@@ -24,16 +25,18 @@ type (
 	}
 )
 
+// GetMD5Hash ...
 func GetMD5Hash() string {
 	hasher := md5.New()
 	hasher.Write([]byte(time.Time.String(time.Now())))
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
+// Connection ...
 func Connection(c echo.Context) error {
 	key := GetMD5Hash()
 
-	value, err := Docker.Mk(key, c.Param("lang"))
+	value, err := docker.Mk(key, c.Param("lang"))
 	if err != nil {
 		c.Logger().Error(err)
 		return c.String(500, "Docker is Panic")
@@ -54,6 +57,7 @@ func Connection(c echo.Context) error {
 
 }
 
+// ExecutionEnvironment ...
 func ExecutionEnvironment(c echo.Context) error {
 	websocket.Handler(func(ws *websocket.Conn) {
 		defer ws.Close()
@@ -64,8 +68,8 @@ func ExecutionEnvironment(c echo.Context) error {
 				c.Logger().Error(err)
 			}
 
-			exec := make(chan Docker.ExecutionCommand)
-			go Docker.Exec(exec, execmd, c.Param("name"))
+			exec := make(chan docker.ExecutionCommand)
+			go docker.Exec(exec, execmd, c.Param("name"))
 
 			for v := range exec {
 				send(ws, v)
@@ -75,12 +79,12 @@ func ExecutionEnvironment(c echo.Context) error {
 	return nil
 }
 
-func send(ws *websocket.Conn, send Docker.ExecutionCommand) {
+func send(ws *websocket.Conn, send docker.ExecutionCommand) {
 	websocket.JSON.Send(ws, send)
 	fmt.Printf("Send data=\x1b[36m%#v\x1b[0m\n", send)
 }
 
-func receive(ws *websocket.Conn) (rcv Docker.ExecutionCommand, err error) {
+func receive(ws *websocket.Conn) (rcv docker.ExecutionCommand, err error) {
 	err = websocket.JSON.Receive(ws, &rcv)
 	if err != nil {
 		return
