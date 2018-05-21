@@ -49,6 +49,10 @@
   branch = "master"
   name = "golang.org/x/net"
 
+[[constraint]]
+  name = "github.com/advancing-life/rabbit-can-middleware"
+	branch = "development"
+
 [prune]
   go-tests = true
   unused-packages = true

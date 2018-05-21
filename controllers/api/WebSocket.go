@@ -42,7 +42,7 @@ func Connection(c echo.Context) error {
 		return c.String(500, "Docker is Panic")
 	}
 
-	err = Redis.SET(key, value)
+	err = redis.SET(key, value)
 	if err != nil {
 		c.Logger().Error(err)
 		return c.String(500, "Redis is Panic")
