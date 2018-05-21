@@ -2,15 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
-  name = "github.com/advancing-life/rabbit-can-middleware"
-  packages = [
-    "controllers/Docker",
-    "controllers/Redis"
-  ]
-  revision = "ead099fe2878760dd87042953efc21a89432e2e5"
-
-[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
@@ -112,7 +103,7 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["websocket"]
-  revision = "2491c5de3490fced2f6cff376127c667efeed857"
+  revision = "57065200b4b034a1c8ad54ff77069408c2218ae6"
 
 [[projects]]
   branch = "master"
@@ -123,6 +114,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c6b2d00e823f56ec1d2e1b2b4ef3720f9231d8d1772c68ab62b73008b0c2f610"
+  inputs-digest = "8ba3440e12e53e1472dd3bee215472e2863332967568a332165b53fbfcef3b5d"
   solver-name = "gps-cdcl"
   solver-version = 1
