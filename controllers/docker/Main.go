@@ -2,7 +2,6 @@ package docker
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"github.com/mattn/go-shellwords"
 	"os/exec"
@@ -75,18 +74,14 @@ func Rm(ID string) (err error) {
 
 // Exec ...
 func Exec(exech chan ExecutionCommand, execmd ExecutionCommand, name string) {
-	// go cmdrun(exits, "docker exec -i "+name+" echo $?")
-
 	go func() {
 		defer close(exech)
 		c, err := shellwords.Parse("docker exec -i " + name + " " + execmd.Command)
-		var ec bytes.Buffer
 
 		if err != nil {
 			fmt.Print(err)
 		}
 		ecmd := exec.Command(c[0], c[1:]...)
-		ecmd.Stdout = &ec
 		stdout, err := ecmd.StdoutPipe()
 
 		if err != nil {
@@ -97,7 +92,6 @@ func Exec(exech chan ExecutionCommand, execmd ExecutionCommand, name string) {
 
 		scanner := bufio.NewScanner(stdout)
 		for scanner.Scan() {
-			fmt.Printf("%q\n", ec.String())
 			execmd.Result = scanner.Text()
 			exech <- execmd
 		}
