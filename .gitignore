@@ -1,3 +1,4 @@
 vendor/
 vendor.orig/
 _vendor*
+rabbit-can-middleware
