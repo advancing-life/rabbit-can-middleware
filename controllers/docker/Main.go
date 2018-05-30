@@ -12,7 +12,7 @@ type ExecutionCommand struct {
 	ContainerID string `json:"container_id"`
 	Command     string `json:"command"`
 	Result      string `json:"result"`
-	ExitStatus  string `json:"exit_status"`
+	ExitStatus  int    `json:"exit_status"`
 }
 
 // cmdrun ...
