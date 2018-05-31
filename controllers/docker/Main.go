@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/mattn/go-shellwords"
 	"os/exec"
+	"strconv"
 )
 
 // ExecutionCommand ...
@@ -82,17 +83,29 @@ func Exec(exech chan ExecutionCommand, execmd ExecutionCommand, name string) {
 			fmt.Print(err)
 		}
 		ecmd := exec.Command(c[0], c[1:]...)
-		stdout, err := ecmd.StdoutPipe()
 
+		stdout, err := ecmd.StdoutPipe()
+		if err != nil {
+			fmt.Print(err)
+		}
+
+		stderr, err := ecmd.StderrPipe()
 		if err != nil {
 			fmt.Print(err)
 		}
 
 		ecmd.Start()
 
-		scanner := bufio.NewScanner(stdout)
-		for scanner.Scan() {
-			execmd.Result = scanner.Text()
+		outscan := bufio.NewScanner(stdout)
+		errscan := bufio.NewScanner(stderr)
+
+		for outscan.Scan() {
+			execmd.Result = outscan.Text()
+			for errscan.Scan() {
+				i, _ := strconv.Atoi(errscan.Text())
+				execmd.ExitStatus = i
+				// execmd.ExitStatus = errscan.Text()
+			}
 			exech <- execmd
 		}
 		ecmd.Wait()
