@@ -1,6 +1,6 @@
 FROM golang:1.9.5-alpine3.7
 
-WORKDIR /go/src/app
+WORKDIR /go/src/github.com/advancing-life/rabbit-can-middleware
 
 COPY . $APP
 

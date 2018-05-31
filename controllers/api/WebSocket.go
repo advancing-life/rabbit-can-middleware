@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	// "app/controllers/docker"
-	// "app/controllers/redis"
 	"github.com/advancing-life/rabbit-can-middleware/controllers/docker"
 	"github.com/advancing-life/rabbit-can-middleware/controllers/redis"
 

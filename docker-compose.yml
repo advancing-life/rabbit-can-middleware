@@ -11,9 +11,9 @@ services:
       - 6379:6379
   server:
     build: .
-    command: realize start --server
+    command: realize start
     volumes:
-      - .:/go/src/app
+      - .:/go/src/github.com/advancing-life/rabbit-can-middleware
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/bin/docker
     env_file: .env
