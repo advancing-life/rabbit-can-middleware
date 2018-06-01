@@ -3,7 +3,7 @@ settings:
     force: false
     interval: 0s
 schema:
-- name: app
+- name: rabbit-can-middleware
   path: .
   commands: 
     run:
