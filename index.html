@@ -27,7 +27,7 @@
       <div id="log" v-for="result in resultData">
         <p v-html="result"></p><!-- &#38;gt;&#38;gt;  -->
       </div>
-      <input type="text" v-model="inputform" v-on:keyup.enter="submit" v-on:keyup.up="historyUp">
+      <input type="text" v-model="inputform" v-on:keyup.enter="submit" v-on:keyup.up="historyUp" v-on:keyup.down="historyDown">
       <span> {{ status }}: サーバーは{{ conntainer_id }} です</span><br>
     </div>
     <script>
@@ -44,10 +44,16 @@
       },
       methods: {
         historyUp() {
-          console.log(vm.history[vm.historyCount]);
           vm.inputform = vm.history[vm.historyCount];
           vm.historyCount++;
           if (vm.historyCount >= vm.history.length) {
+            vm.historyCount = 0;
+          }
+        },
+        historyDown() {
+          vm.inputform = vm.history[vm.historyCount];
+          vm.historyCount--;
+          if (vm.historyCount < 0) {
             vm.historyCount = 0;
           }
         },
