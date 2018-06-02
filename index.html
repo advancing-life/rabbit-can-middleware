@@ -58,6 +58,7 @@
           }
         },
         submit () {
+          vm.resultData.push("<p style='font-weight:bold; color:#fcfcfc;'> user@" + vm.conntainer_id + "$  "  + vm.inputform + "</p>");
           ws.send(JSON.stringify({container_id: vm.conntainer_id,command: vm.inputform}));
           vm.history.unshift(vm.inputform);
           vm.historyCount = 0
@@ -91,7 +92,6 @@
         })
       }
     })
-    //
     </script>
   </body>
 </html>
