@@ -2,7 +2,6 @@ package docker
 
 import (
 	"bufio"
-	"fmt"
 	"github.com/mattn/go-shellwords"
 	"os/exec"
 )
@@ -12,7 +11,8 @@ type ExecutionCommand struct {
 	ContainerID string `json:"container_id"`
 	Command     string `json:"command"`
 	Result      string `json:"result"`
-	ExitStatus  string `json:"exit_status"`
+	ErrResult   error  `json:"error_result"`
+	// ExitStatus  string `json:"exit_status"`
 }
 
 // cmdrun ...
@@ -76,25 +76,69 @@ func Rm(ID string) (err error) {
 func Exec(exech chan ExecutionCommand, execmd ExecutionCommand, name string) {
 	go func() {
 		defer close(exech)
-		c, err := shellwords.Parse("docker exec -i " + name + " " + execmd.Command)
+		c, err := shellwords.Parse("docker exec -i " + name + " sh -c '" + execmd.Command + "'")
 
 		if err != nil {
-			fmt.Print(err)
-		}
-		ecmd := exec.Command(c[0], c[1:]...)
-		stdout, err := ecmd.StdoutPipe()
-
-		if err != nil {
-			fmt.Print(err)
-		}
-
-		ecmd.Start()
-
-		scanner := bufio.NewScanner(stdout)
-		for scanner.Scan() {
-			execmd.Result = scanner.Text()
+			execmd.ErrResult = err
 			exech <- execmd
 		}
-		ecmd.Wait()
+
+		cmd := exec.Command(c[0], c[1:]...)
+
+		stdout, err := cmd.StdoutPipe()
+		if err != nil {
+			execmd.ErrResult = err
+			exech <- execmd
+		}
+		stderr, err := cmd.StderrPipe()
+		if err != nil {
+			execmd.ErrResult = err
+			exech <- execmd
+		}
+
+		err = cmd.Start()
+		if err != nil {
+			execmd.ErrResult = err
+			exech <- execmd
+		}
+
+		streamReader := func(scanner *bufio.Scanner, outputChan chan string, doneChan chan bool) {
+			defer close(outputChan)
+			defer close(doneChan)
+			for scanner.Scan() {
+				outputChan <- scanner.Text()
+			}
+			doneChan <- true
+		}
+
+		stdoutScanner := bufio.NewScanner(stdout)
+		stdoutOutputChan := make(chan string)
+		stdoutDoneChan := make(chan bool)
+		stderrScanner := bufio.NewScanner(stderr)
+		stderrOutputChan := make(chan string)
+		stderrDoneChan := make(chan bool)
+		go streamReader(stdoutScanner, stdoutOutputChan, stdoutDoneChan)
+		go streamReader(stderrScanner, stderrOutputChan, stderrDoneChan)
+
+		stillGoing := true
+		for stillGoing {
+			select {
+			case <-stdoutDoneChan:
+				stillGoing = false
+			case line := <-stdoutOutputChan:
+				execmd.Result = line
+				exech <- execmd
+			case line := <-stderrOutputChan:
+				execmd.Result = line
+				exech <- execmd
+			}
+		}
+
+		ret := cmd.Wait()
+		if ret != nil {
+			execmd.ErrResult = err
+			exech <- execmd
+		}
+
 	}()
 }

@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	// "app/controllers/docker"
-	// "app/controllers/redis"
 	"github.com/advancing-life/rabbit-can-middleware/controllers/docker"
 	"github.com/advancing-life/rabbit-can-middleware/controllers/redis"
 
@@ -72,16 +70,20 @@ func ExecutionEnvironment(c echo.Context) error {
 			go docker.Exec(exec, execmd, c.Param("name"))
 
 			for v := range exec {
-				send(ws, v)
+				err := send(ws, v)
+				if err != nil {
+					ws.Close()
+				}
 			}
 		}
 	}).ServeHTTP(c.Response(), c.Request())
 	return nil
 }
 
-func send(ws *websocket.Conn, send docker.ExecutionCommand) {
-	websocket.JSON.Send(ws, send)
+func send(ws *websocket.Conn, send docker.ExecutionCommand) (err error) {
+	err = websocket.JSON.Send(ws, send)
 	fmt.Printf("Send data=\x1b[36m%#v\x1b[0m\n", send)
+	return
 }
 
 func receive(ws *websocket.Conn) (rcv docker.ExecutionCommand, err error) {

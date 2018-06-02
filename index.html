@@ -27,7 +27,7 @@
       <div id="log" v-for="result in resultData">
         <p v-html="result"></p><!-- &#38;gt;&#38;gt;  -->
       </div>
-      <input type="text" v-model="inputform" v-on:keyup.enter="submit">
+      <input type="text" v-model="inputform" v-on:keyup.enter="submit" v-on:keyup.up="historyUp" v-on:keyup.down="historyDown">
       <span> {{ status }}: サーバーは{{ conntainer_id }} です</span><br>
     </div>
     <script>
@@ -35,14 +35,33 @@
     var vm = new Vue({
       el: "#app",
       data: {
+        history: [],
+        historyCount: 0,
         resultData: [],
         inputform: "",
         conntainer_id: "",
         status: "",
       },
       methods: {
+        historyUp() {
+          vm.inputform = vm.history[vm.historyCount];
+          vm.historyCount++;
+          if (vm.historyCount >= vm.history.length) {
+            vm.historyCount = 0;
+          }
+        },
+        historyDown() {
+          vm.inputform = vm.history[vm.historyCount];
+          vm.historyCount--;
+          if (vm.historyCount < 0) {
+            vm.historyCount = 0;
+          }
+        },
         submit () {
+          vm.resultData.push("<p style='font-weight:bold; color:#fcfcfc;'> user@" + vm.conntainer_id + "$  "  + vm.inputform + "</p>");
           ws.send(JSON.stringify({container_id: vm.conntainer_id,command: vm.inputform}));
+          vm.history.unshift(vm.inputform);
+          vm.historyCount = 0
           vm.inputform = "";
         }
       },
@@ -64,17 +83,15 @@
           }
           ws.onmessage = evt =>{
             let data = JSON.parse(evt.data);
-            // console.log(data);
+            console.log(data);
             vm.resultData.push(data.result.replace(/\r?\n/g, '<br>'));
           }
-
           ws.onerror = error => {
             console.log("Error:" + error);
           }
         })
       }
     })
-    //
     </script>
   </body>
 </html>
